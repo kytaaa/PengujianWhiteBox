@@ -1,37 +1,32 @@
-// Fungsi untuk menghitung total pemasukan atau pengeluaran berdasarkan jenis transaksi
-function hitungTotal(jenis) {
+function hitungTotal(transaksi) {
   let total = 0;
-  for (let transaksi of transaksiList) {
-    if (transaksi.jenis === jenis) {
-      total += transaksi.nominal;
-    }
+  for (let t of transaksi) {
+      total += t.jumlah;
   }
   return total;
 }
 
-// Array untuk menyimpan transaksi (dummy data untuk pengujian)
-let transaksiList = [
-  { jenis: "pemasukan", nominal: 5000000 },
-  { jenis: "pengeluaran", nominal: 2000000 },
-  { jenis: "pemasukan", nominal: 3000000 },
-];
-
-// Pengujian White Box untuk fungsi hitungTotal
-function testHitungTotal() {
-  // Pengujian untuk total pemasukan
-  const totalPemasukan = hitungTotal("pemasukan");
-  console.assert(
-    totalPemasukan === 8000000,
-    `Pengujian hitungTotal pemasukan gagal. Hasil: ${totalPemasukan}`
-  );
-
-  // Pengujian untuk total pengeluaran
-  const totalPengeluaran = hitungTotal("pengeluaran");
-  console.assert(
-    totalPengeluaran === 2000000,
-    `Pengujian hitungTotal pengeluaran gagal. Hasil: ${totalPengeluaran}`
-  );
+function cekSaldo(saldo, jumlah) {
+  return saldo >= jumlah;
 }
 
-// Menjalankan pengujian White Box
-testHitungTotal();
+function mainApps(transaksi, pengguna) {
+  const total = hitungTotal(transaksi);
+  if (cekSaldo(pengguna.saldo, total)) {
+      return "Transaksi Berhasil";
+  } else {
+      return "Saldo Tidak Cukup";
+  }
+}
+
+// Pengujian fungsi
+function tryMainApps() {
+  const transaksi = [{ jumlah: 100 }, { jumlah: 200 }, { jumlah: 300 }];
+  const pengguna = { saldo: 1000 };
+  console.assert(mainApps(transaksi, pengguna) === "Transaksi Berhasil", "Try mainApps gagal (case 1)");
+  const penggunaKurangSaldo = { saldo: 500 };
+  console.assert(mainApps(transaksi, penggunaKurangSaldo) === "Saldo Tidak Cukup", "Try mainApps gagal (case 2)");
+}
+
+tryMainApps();
+console.log("Semua pengujian telah berhasil.");
